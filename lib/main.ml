@@ -6,8 +6,10 @@ type shape =
   | Circle of (float)
   | Rectangle of (float * float)
 
-let calcArea (Circle r) = Float.pi *. r *.  r
-let calcArea (Rectangle (w, h)) = w *. h
+let calcArea shape =
+  match shape with
+    |Circle r  -> Float.pi *. r *.  r
+    |Rectangle (w, h) -> w *. h
 let uri = Uri.of_string "https://open.spotify.com"
 
 (* let headers = Header.add_list (Header.init ()) [
