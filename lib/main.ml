@@ -6,7 +6,7 @@ type shape =
   | Circle of (float)
   | Rectangle of (float * float)
 
-let calcArea (Circle r) = 3.14 *. r *.  r
+let calcArea (Circle r) = Float.pi *. r *.  r
 let calcArea (Rectangle (w, h)) = w *. h
 let uri = Uri.of_string "https://open.spotify.com"
 
