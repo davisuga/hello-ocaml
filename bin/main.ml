@@ -2,4 +2,5 @@ open HelloOCaml
 
 let () =
 
-  Main.main
+  Main.test();;
+  Main.main();;

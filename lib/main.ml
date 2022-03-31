@@ -1,15 +1,8 @@
 open Lwt
 open Cohttp
 open Cohttp_lwt_unix
+open Str
 
-type shape = 
-  | Circle of (float)
-  | Rectangle of (float * float)
-
-let calcArea shape =
-  match shape with
-    |Circle r  -> Float.pi *. r *.  r
-    |Rectangle (w, h) -> w *. h
 let uri = Uri.of_string "https://open.spotify.com"
 
 (* let headers = Header.add_list (Header.init ()) [
@@ -29,16 +22,38 @@ let uri = Uri.of_string "https://open.spotify.com"
   ("sec-fetch-dest", "empty");
   ("referer", "https://open.spotify.com/");
 ] *)
-
+let defaultExtesionsParam = {|{"persistedQuery":{"version":1,"sha256Hash":"3ea563e1d68f486d8df30f69de9dcedae74c77e684b889ba7408c589d30f7f2e"}}|}
 let body =
   Client.get (uri) >>= fun (resp, body) ->
-  let code = resp |> Response.status |> Code.code_of_status in
-  Printf.printf "Response code: %d\n" code;
-  Printf.printf "Headers: %s\n" (resp |> Response.headers |> Header.to_string);
+    
+  let _code = resp |> Response.status |> Code.code_of_status in
+  
+  (* Printf.printf "Response code: %d\n" code; *)
+  (* Printf.printf "Headers: %s\n" (resp |> Response.headers |> Header.to_string); *)
   body |> Cohttp_lwt.Body.to_string >|= fun body ->
-  Printf.printf "Body of length: %d\n" (String.length body);
+  (* Printf.printf "Body: %s\n" (body ); *)
   body
 
-let main =
+let matchTokenExp =  Str.regexp "accessToken\":\"\\(.+?\\)\""  
+let matchGroup nth reg str = 
+  let re = Str.regexp reg in
+  let _ = search_forward re str 0 in
+  Str.matched_group nth str 
+
+let tokenSize = 83
+
+let getTokenFromStr s =  Str.first_chars (matchGroup 1 {|accessToken":"\(.+?\)",|} s ) tokenSize
+
+let showToken token = Printf.printf "%s" token
+let fetchNewToken () = 
+  Lwt_main.run body |> getTokenFromStr
+let trace x = let _ =Printf.printf "trace: %s\n" x in x
+
+let main  ()=
   let body = Lwt_main.run body in
-  print_endline ("Received body\n" ^ body)
+  ( body  |> getTokenFromStr |> showToken) 
+
+
+let test () =
+  (* matchGroup 1 {|hello \([A-Za-z]+\)|} "hello world" |> print_string;; *)
+  ()

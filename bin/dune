@@ -1,4 +1,4 @@
 (executable
  (public_name helloOCaml)
  (name main)
- (libraries helloOCaml base cohttp lwt cohttp-lwt-unix tls))
+ (libraries helloOCaml base cohttp lwt cohttp-lwt-unix tls re))

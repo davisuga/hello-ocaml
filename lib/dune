@@ -1,3 +1,3 @@
 (library
  (name helloOCaml)
- (libraries base cohttp lwt cohttp-lwt-unix tls))
+ (libraries base cohttp lwt cohttp-lwt-unix tls str yojson))
